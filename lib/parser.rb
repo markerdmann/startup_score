@@ -9,7 +9,7 @@ class Parser
       names = doc.css('.founder a.linkedin').map do |el|
         (el['href'].match(%r{linkedin.com/in/(\w+)})||[])[1]
       end.compact
-      names << (url.match(%r{angel.co/(\w+)})||[])[1]
+      names << (url.match(%r{angel.co/([0-9a-zA-Z-]+)})||[])[1]
       p names
       scores = names.map do |name|
           res = JSON.load(open("https://github.com/api/v2/json/user/show/#{name}").read) rescue next
@@ -27,5 +27,5 @@ class Parser
   end
 end
 
-Parser.score('http://angel.co/genomera')
-Parser.score('http://angel.co/tout')
+#Parser.score('http://angel.co/genomera')
+#Parser.score('http://angel.co/tout')
