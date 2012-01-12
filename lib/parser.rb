@@ -6,19 +6,26 @@ require 'json'
 class Parser
   def self.score(url)
       doc = Nokogiri::HTML(open(url))
-      scores = doc.css('.founder .profile-link').map do |founder|
-          query = CGI.escape("\"#{founder.text}\" profile site:github.com")
-          url = "http://www.google.com/search?q=#{query}"
-          html = open(url).read
-          name = (html.match(%r{github.com/(\w+)})||[])[1]
-          next unless name
+      names = doc.css('.founder a.linkedin').map do |el|
+        (el['href'].match(%r{linkedin.com/in/(\w+)})||[])[1]
+      end.compact
+      names << (url.match(%r{angel.co/(\w+)})||[])[1]
+      p names
+      scores = names.map do |name|
           res = JSON.load(open("https://github.com/api/v2/json/user/show/#{name}").read) rescue next
           follower_count = res['user']['followers_count'].to_i
-          repo_count = res['user']['public_repo_count'].to_i
-          score = follower_count + repo_count
-          [score, name, founder.text]
+          repos = JSON.load(open("https://github.com/api/v2/json/repos/show/#{name}").read) rescue next
+          score = follower_count
+          repos['repositories'].each do |repo|
+            score += repo['watchers']
+          end
+          [score, name]
       end.compact
       scores.sort!
-      scores.map {|s| s[0] }.inject(:+)
+      p scores
+      scores.map {|s| s[0] }.inject(:+) || 0
   end
 end
+
+Parser.score('http://angel.co/genomera')
+Parser.score('http://angel.co/tout')

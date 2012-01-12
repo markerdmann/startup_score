@@ -1,9 +1,32 @@
 <html>
 <head>
   <title>StartupScore</title>
+  <link href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.css" rel="stylesheet">
 </head>
-
+<style>
+  h1, h3, p {
+    text-align: center;
+    margin: 20px;
+  }
+  .quotient {
+    text-align: center;
+  }
+</style>
 <body>
-
+  <div class="container">
+    <div class="row">
+      <h1>Startup Score</h1>
+      <h3>A <a href="github.com">GitHub</a> + <a href="angelist.co">AngelList</a> Mashup</h3>
+      <p>Questions? Contact <a href="twitter.com/markerdmann">@markerdmann</a>, <a href="twitter.com/grosser">@grosser</a>, or Alfred Chan</p>
+      <div class="span8 offset4">
+        <table>
+          <tr><th>Startup</th><th class="quotient">GitHub Hacker Quotient</th></tr>
+          <% Startup.order("score desc").each do |startup| %>
+            <tr><td><a href="<%= startup.url %>"><%= startup.name %></a></td><td class="quotient"><%= startup.score %></td></tr>
+          <% end%>
+        </table>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
