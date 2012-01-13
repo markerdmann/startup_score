@@ -15,7 +15,7 @@ set :views, 'views'
 set :public_folder, 'public' # shotgun serves them but rackup does not ...
 
 get "/" do
-  @page = params[:page].to_i
+  @page = (params[:page] || 1).to_i
   @prev = @page > 1 ? @page - 1 : 1
   @next = @page + 1
   @startups = Startup.order("score desc")
