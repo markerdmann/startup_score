@@ -4,6 +4,8 @@ Bundler.setup
 Bundler.require
 
 require 'logger'
+require 'will_paginate'
+require 'will_paginate/active_record'
 $LOAD_PATH << './lib'
 require 'parser'
 require 'startup'

@@ -1,30 +1,64 @@
 <html>
 <head>
   <title>StartupScore</title>
-  <link href="http://twitter.github.com/bootstrap/1.4.0/bootstrap.css" rel="stylesheet">
+  <link href="/bootstrap.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min.js"></script>
+  <script src="/bootstrap-twipsy.js"></script>
+  <script src="/bootstrap-popover.js"></script>
 </head>
+<script>
+  $(document).ready(function() {
+    var page = <%= @page || 1 %>;
+    var start = (page > 2) ? page - 2 : 1;
+    var li_next = $('li.next');
+    for (i = start; i < start + 5; i++) {
+      li_next.before('<li class="num"><a href="/?page=' + i + '">' + i + '</a></li>');
+      if (i == page) {
+        li_next.prev().addClass('disabled');
+      }
+    }
+    var pag_div = $('div.pagination ul');
+    var offset = (460 - pag_div.width()) / 2;
+    pag_div.css('margin-left', offset + 'px');
+    $('th.quotient').popover();
+  });
+</script>
 <style>
-  h1, h3, p {
+  body {
+
+  }
+  div.row h1, div.row h3, div.row p {
     text-align: center;
     margin: 20px;
   }
   .quotient {
     text-align: center;
+    width: 160px;
+  }
+  th.quotient {
+    text-decoration: underline;
   }
 </style>
 <body>
+  <a href="http://github.com/markerdmann/startup_score"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://a248.e.akamai.net/assets.github.com/img/e6bef7a091f5f3138b8cd40bc3e114258dd68ddf/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f72696768745f7265645f6161303030302e706e67" alt="Fork me on GitHub"></a>
   <div class="container">
     <div class="row">
       <h1>Startup Score</h1>
-      <h3>A <a href="github.com">GitHub</a> + <a href="angelist.co">AngelList</a> Mashup</h3>
-      <p>Questions? Contact <a href="twitter.com/markerdmann">@markerdmann</a>, <a href="twitter.com/grosser">@grosser</a>, or Alfred Chan</p>
+      <h3>A <a href="http://github.com">GitHub</a> + <a href="http://angelist.co">AngelList</a> Mashup</h3>
+      <p>Questions? Contact <a href="http://twitter.com/markerdmann">@markerdmann</a>, <a href="http://twitter.com/grosser">@grosser</a>, or Alfred Chan</p>
       <div class="span8 offset4">
         <table>
-          <tr><th>Startup</th><th class="quotient">GitHub Hacker Quotient</th></tr>
-          <% Startup.order("score desc").each do |startup| %>
+          <tr><th>AngelList Startup</th><th class="quotient" rel="popover" data-original-title="How is it calculated?" data-content="We try to match the startup name and each team member's LinkedIn username to a GitHub account. For every match, we sum the follower count and the watcher counts of the repos.">GitHub Hacker Quotient</th></tr>
+          <% @startups.each do |startup| %>
             <tr><td><a href="<%= startup.url %>"><%= startup.name %></a></td><td class="quotient"><%= startup.score %></td></tr>
           <% end%>
         </table>
+        <div class="pagination">
+          <ul>
+            <li class="prev"><a href="/?page=<%= @prev %>">&larr; Previous</a></li>
+            <li class="next"><a href="/?page=<%= @next %>">Next &rarr;</a></li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>

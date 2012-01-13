@@ -9,6 +9,7 @@ gem 'sqlite3'
 gem 'standalone_migrations'
 gem 'json'
 gem 'nokogiri'
+gem 'will_paginate'
 
 group :development do
   gem 'shotgun'
