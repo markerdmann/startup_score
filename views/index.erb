@@ -34,6 +34,9 @@
     var offset = (460 - pag_div.width()) / 2;
     pag_div.css('margin-left', offset + 'px');
     $('th.quotient').popover();
+    $('tr.startup').click(function() {
+      window.location = $('a', this).attr('href');
+    });
   });
 </script>
 <style>
@@ -63,7 +66,7 @@
         <table>
           <tr><th>AngelList Startup</th><th class="quotient" rel="popover" data-original-title="How is it calculated?" data-content="We try to match the startup name and each team member's LinkedIn username to a GitHub account. For every match, we sum the follower count and the watcher counts of the repos.">GitHub Hacker Quotient</th></tr>
           <% @startups.each do |startup| %>
-            <tr><td><a href="<%= startup.url %>"><%= startup.name %></a></td><td class="quotient"><%= startup.score %></td></tr>
+            <tr class="startup"><td><a href="<%= startup.url %>"><%= startup.name %></a></td><td class="quotient"><%= startup.score %></td></tr>
           <% end%>
         </table>
         <div class="pagination">
